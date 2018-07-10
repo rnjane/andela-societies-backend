@@ -8,8 +8,8 @@
 
 
 The Andela Societies are an awesome platform for collaboration and relationship-building across all centers of Andela for all fellows.
-They give all Fellows a common ground to interact and know about each other regardless as to the geographical location of each one of them.
-This way location of the Fellow does not stand in the way of the opportunity for long-lasting collaborative relationships being formed.
+They give all fellows a common ground to interact and know about each other regardless as to the geographical location of each one of them.
+This way location of the fellow does not stand in the way of the opportunity for long-lasting collaborative relationships being formed.
 
 
 - ## API

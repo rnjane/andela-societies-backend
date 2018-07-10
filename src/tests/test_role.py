@@ -42,7 +42,7 @@ class RoleTestCase(BaseTestCase):
         self.assertEqual(message, response_details["message"])
 
     def test_fellow_cannot_create_society(self):
-        """Test if Fellow role can access Society endpoint."""
+        """Test if fellow role can access Society endpoint."""
         new_society = dict(name="Gryffindor",
                            colorScheme="#333333",
                            logo="https://bit.ly/2FE1KI2",
@@ -59,10 +59,10 @@ class RoleTestCase(BaseTestCase):
         message = "You're unauthorized to perform this operation"
         response_details = json.loads(response.data)
 
-        self.assertEqual(message, response_details["message"])
+        self.assertIn(message, response_details["message"])
 
     def test_successops_can_create_society(self):
-        """Test if Success Ops role can access Society endpoint."""
+        """Test if success ops role can access Society endpoint."""
         new_society = dict(name="Gryffindor",
                            colorScheme="#333333",
                            logo="https://bit.ly/2FE1KI2",
@@ -83,7 +83,7 @@ class RoleTestCase(BaseTestCase):
 
     def test_create_role(self):
         """Test if role can be created."""
-        new_role = dict(name="Society President")
+        new_role = dict(name="society president")
 
         response = self.client.post("/api/v1/roles",
                                     data=json.dumps(new_role),
@@ -100,7 +100,7 @@ class RoleTestCase(BaseTestCase):
 
     def test_create_existing_role(self):
         """Test if role can be created."""
-        new_role = dict(name="Success Ops")
+        new_role = dict(name="success ops")
 
         response = self.client.post("/api/v1/roles",
                                     data=json.dumps(new_role),
@@ -284,10 +284,10 @@ class SocietyRoleTestCase(BaseTestCase):
         self.test_user_3.save()
 
     def test_reassign_society_president(self):
-        """Test the appointment of new President."""
+        """Test the appointment of new society vice president."""
         new_president = dict(name="Test User",
                              society="Phoenix",
-                             role="President")
+                             role="society vice president")
 
         response = self.client.put("/api/v1/roles/society-execs",
                                    data=json.dumps(new_president),
@@ -301,10 +301,10 @@ class SocietyRoleTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_reassign_society_vice_president(self):
-        """Test the appointment of new Vice President."""
+        """Test the appointment of new society vice president."""
         new_vice_president = dict(name="Test User",
                                   society="Sparks",
-                                  role="Vice President")
+                                  role="society vice president")
 
         response = self.client.put("/api/v1/roles/society-execs",
                                    data=json.dumps(new_vice_president),
@@ -318,10 +318,10 @@ class SocietyRoleTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_reassign_society_secretary(self):
-        """Test the appointment of new Secretary."""
+        """Test the appointment of new society secretary."""
         new_secretary = dict(name="Test User",
                              society="Invictus",
-                             role="Secretary")
+                             role="society secretary")
 
         response = self.client.put("/api/v1/roles/society-execs",
                                    data=json.dumps(new_secretary),

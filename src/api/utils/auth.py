@@ -6,10 +6,11 @@ communicate with the API.
 """
 import base64
 from functools import wraps
-from flask import g, jsonify, request, current_app
+
+from flask import current_app, g, jsonify, request
 from jose import ExpiredSignatureError, JWTError, jwt
 
-from api.models import User, Role
+from api.models import Role, User
 from api.utils.helpers import add_extra_user_info, response_builder
 
 
@@ -65,8 +66,8 @@ def token_required(f):
             "name": "test user",
             "picture": "link",
             "roles": {
-                "Andelan": "unique_id",
-                "Fellow": "unique_id"
+                "andelan": "unique_id",
+                "fellow": "unique_id"
             }
         }
 
@@ -76,10 +77,12 @@ def token_required(f):
         elif payload["UserInfo"].keys() != expected_user_info_format.keys():
             return response_builder(dict(message=unauthorized_message), 401)
         else:
-            store_user_details(payload, authorization_token)
-
-            # now return wrapped function
-            return f(*args, **kwargs)
+            user = User.query.get(payload["UserInfo"]["id"])
+            if not user:
+                user = store_user_details(payload, authorization_token)
+            g.current_user = user
+            g.current_user_token = authorization_token
+        return f(*args, **kwargs)
     return decorated
 
 
@@ -110,16 +113,13 @@ def store_user_details(payload, token):
         location.members.append(user)
         location.save()
 
-    # set current user in flask global variable, g
+    # store user roles in the DB
     user.roles = [
         Role.query.filter_by(name=role).first() for role in roles
-        if role != "Andelan" and Role.query.filter_by(
+        if role != "andelan" and Role.query.filter_by(
             name=role).first() is not None]
-
     user.save()
-
-    g.current_user = user
-    g.current_user_token = token
+    return user
 
 
 def roles_required(roles):  # roles should be a list
@@ -131,7 +131,7 @@ def roles_required(roles):  # roles should be a list
                     [Role.query.filter_by(name=role).first()
                      for role in roles]):
                 return response_builder(dict(message="You're unauthorized"
-                                             " to perform this operation"),
+                                             " to perform this operation r."),
                                         401)
             return f(*args, **kwargs)
         return decorated

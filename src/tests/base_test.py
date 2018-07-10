@@ -7,7 +7,7 @@ from unittest import TestCase, mock
 from jose import jwt
 
 from app import create_app
-from api.models import (Activity, ActivityType, Cohort, Country,
+from api.models import (Activity, ActivityType, Cohort, Center,
                         LoggedActivity, Society, User, Role, RedemptionRequest,
                         db)
 
@@ -25,8 +25,8 @@ class BaseTestCase(TestCase):
             "name": "Test User",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Fellow": "-KXGy1EB1oimjQgFim6C"
+                    "andelan": "-Ktest_andelan_id",
+                    "fellow": "-KXGy1EB1oimjQgFim6C"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -41,8 +41,8 @@ class BaseTestCase(TestCase):
             "name": "Test User2",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Fellow": "-Ktest_fellow_id"
+                    "andelan": "-Ktest_andelan_id",
+                    "fellow": "-Ktest_fellow_id"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -57,8 +57,8 @@ class BaseTestCase(TestCase):
             "name": "test test",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Success Ops": "-KkLwgbeJUO0dQKsEk1i"
+                    "andelan": "-Ktest_andelan_id",
+                    "success ops": "-KkLwgbeJUO0dQKsEk1i"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -73,8 +73,8 @@ class BaseTestCase(TestCase):
             "name": "test test",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Learning Facilitator": "-Ktest_fellow_id"
+                    "andelan": "-Ktest_andelan_id",
+                    "learning facilitator": "-Ktest_fellow_id"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -85,12 +85,28 @@ class BaseTestCase(TestCase):
             "email": "test.president.societies@andela.com",
             "first_name": "Test",
             "id": "-KdQsMtixG4U0y_-yJEH",
-            "last_name": "President",
-            "name": "Test President",
+            "last_name": "society vice president",
+            "name": "Test society vice president",
             "picture": "https://bit.ly/2MeuICK",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Society President": "-KXGyd2udi2"
+                    "andelan": "-Ktest_andelan_id",
+                    "society president": "-KXGyd2udi2"
+            }
+        },
+        "exp": exp_date + datetime.timedelta(days=1)
+    }
+
+    test_cio_role_payload = {
+        "UserInfo": {
+            "email": "test.president.societies@andela.com",
+            "first_name": "Test",
+            "id": "-KdQsMtixG4U0y_-yJEH",
+            "last_name": "society vice president",
+            "name": "Test society vice president",
+            "picture": "https://bit.ly/2MeuICK",
+            "roles": {
+                    "andelan": "-Ktest_andelan_id",
+                    "cio": "-KXGionceu24i2y"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -121,8 +137,8 @@ class BaseTestCase(TestCase):
             "name": "Test User",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Fellow": "-Ktest_fellow_id"
+                    "andelan": "-Ktest_andelan_id",
+                    "fellow": "-Ktest_fellow_id"
             }
         },
         "exp": exp_date - datetime.timedelta(days=1)
@@ -135,8 +151,8 @@ class BaseTestCase(TestCase):
             "name": "test test",
             "picture": "https://www.link.com",
             "roles": {
-                    "Andelan": "-Ktest_andelan_id",
-                    "Fellow": "-Ktest_fellow_id"
+                    "andelan": "-Ktest_andelan_id",
+                    "fellow": "-Ktest_fellow_id"
             }
         },
         "exp": exp_date + datetime.timedelta(days=1)
@@ -182,10 +198,10 @@ class BaseTestCase(TestCase):
             "Content-Type": "application/json"
         }
 
-        # test countries
-        self.kenya = Country(name='Kenya')
-        self.uganda = Country(name='Uganda')
-        self.nigeria = Country(name='Nigeria')
+        # test centers
+        self.kenya = Center(name='Kenya')
+        self.uganda = Center(name='Uganda')
+        self.nigeria = Center(name='Nigeria')
 
         # test societies
         self.phoenix = Society(name="Phoenix",
@@ -207,21 +223,24 @@ class BaseTestCase(TestCase):
 
         # test roles
         self.successops_role = Role(uuid="-KkLwgbeJUO0dQKsEk1i",
-                                    name="Success Ops")
-        self.fellow_role = Role(uuid="-KXGy1EB1oimjQgFim6C", name="Fellow")
-        self.success_role = Role(uuid="-KXGy1EB1oimjQgFim6F", name="Success")
-        self.finance_role = Role(uuid="-KXGy1EB1oimjQgFim6L", name="Finance")
+                                    name="success ops")
+        self.fellow_role = Role(uuid="-KXGy1EB1oimjQgFim6C", name="fellow")
+        self.success_role = Role(uuid="-KXGy1EB1oimjQgFim6F", name="success")
+        self.finance_role = Role(uuid="-KXGy1EB1oimjQgFim6L", name="finance")
         self.lf_role = Role(uuid="d47ec8a7-3f09-44a5-8188-ff1d40ef35b6",
                             name="Learning Facilitator")
-        self.president_role = Role(uuid="-KXGyd2udi2", name="President")
-        self.v_president_role = Role(uuid="-KXGy32odnd", name="Vice President")
-        self.secretary_role = Role(uuid="-KXGy12odfn2idn", name="Secretary")
-        self.cio_role = Role(uuid="-KXGionceu24i2y", name="CIO")
+        self.president_role = Role(uuid="-KXGyd2udi2",
+                                   name="society president")
+        self.v_president_role = Role(uuid="-KXGy32odnd",
+                                     name="society vice president")
+        self.secretary_role = Role(uuid="-KXGy12odfn2idn",
+                                   name="society secretary")
+        self.cio_role = Role(uuid="-KXGionceu24i2y", name="cio")
 
         # test cohorts
-        self.cohort_12_Ke = Cohort(name="cohort-12", country=self.kenya)
-        self.cohort_12_Ug = Cohort(name="cohort-12", country=self.uganda)
-        self.cohort_1_Nig = Cohort(name="cohort-1", country=self.nigeria)
+        self.cohort_12_Ke = Cohort(name="cohort-12", center=self.kenya)
+        self.cohort_12_Ug = Cohort(name="cohort-12", center=self.uganda)
+        self.cohort_1_Nig = Cohort(name="cohort-1", center=self.nigeria)
 
         # test users
         self.test_user = User(
@@ -229,7 +248,7 @@ class BaseTestCase(TestCase):
             name="Test User",
             photo="https://www.link.com",
             email="test.user.societies@andela.com",
-            country=self.nigeria,
+            center=self.nigeria,
             cohort=self.cohort_1_Nig,
             society=self.phoenix
             )
@@ -238,7 +257,7 @@ class BaseTestCase(TestCase):
             name="Test User2",
             photo="https://www.link.com",
             email="test.user2.societies@andela.com",
-            country=self.uganda,
+            center=self.uganda,
             cohort=self.cohort_12_Ug,
             society=self.sparks
         )
@@ -247,38 +266,38 @@ class BaseTestCase(TestCase):
             name="Test User3",
             photo="https://www.link.com",
             email="test.user3.societies@andela.com",
-            country=self.kenya,
+            center=self.kenya,
             cohort=self.cohort_12_Ke,
             society=self.invictus
         )
 
         self.president = User(
             uuid="-KdQsMtixG4U0y_-yJEH",
-            name="Test President",
+            name="Test society vice president",
             photo="https://lh6.googleusercontent.com/-1DhBLOJentg/AAAAAAAAA"
                   "AI/AAAAAAnAABc/ImeP_cAI/photo.jpg?sz=50",
             email="test.president.societies@andela.com",
-            country=self.kenya,
+            center=self.kenya,
             cohort=self.cohort_12_Ke,
             society=self.phoenix
         )
         self.vice_president = User(
             uuid="-KdQsMtixGc2nuekwnd",
-            name="Test Vice-President",
+            name="Test Vice-society vice president",
             photo="https://lh6.googleusercontent.com/-1DhBLOJentg/AAAAAAAAA"
                   "AI/AAAAAAnAABc/ImeP_cAI/photo.jpg?sz=50",
             email="test.vice_president.societies@andela.com",
-            country=self.kenya,
+            center=self.kenya,
             cohort=self.cohort_12_Ke,
             society=self.sparks
         )
         self.secretary = User(
             uuid="-KdQsMcwkncwnclkj",
-            name="Test Secretary",
+            name="Test society secretary",
             photo="https://lh6.googleusercontent.com/-1DhBLOJentg/AAAAAAAAA"
                   "AI/AAAAAAnAABc/ImeP_cAI/photo.jpg?sz=50",
             email="test.secretary.societies@andela.com",
-            country=self.kenya,
+            center=self.kenya,
             cohort=self.cohort_12_Ke,
             society=self.invictus
         )
@@ -333,7 +352,7 @@ class BaseTestCase(TestCase):
             name="T-shirt Funds Request",
             value=2500,
             user=self.test_user,
-            country=self.test_user.country
+            center=self.test_user.center
         )
 
         # save common items to db
